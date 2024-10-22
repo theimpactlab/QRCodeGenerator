@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/easyqrcodejs@4.4.0/dist/easy.qrcode.min.js"></script>
+    <script src="https://kit.fontawesome.com/19a0336ebe.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <div id="header">
+        <!-- //<img src="x" alt="x" style="height: 100px;"> -->
+    </div>
+
+    <h1>QR Code Generator</h1>
+    <label for="text">Enter text or URL:</label>
+    <input type="text" id="text">
+    <label for="logo">Upload Logo:</label>
+    <input type="file" id="logo" accept="image/*">
+    <button onclick="generateQRCode()">Generate QR Code</button>
+    <button id="downloadResultsButton" onclick="downloadQRCode()">Download QR Code</button>
+    <br>
+    <br>
+    <div id="qrcode"></div>
+
+    <script>
+
+    function generateQRCode() {
+        var text = document.getElementById('text').value;
+        var logoInput = document.getElementById('logo').files[0];
+
+        if (!text) {
+            alert('Please enter some text or URL.');
+            return;
+        }
+
+        document.getElementById('qrcode').innerHTML = ''; // Clear existing QR code
+
+        // Default logo size as a fraction of QR code size (e.g., 20%)
+        var logoSizeFraction = 0.25;
+        var errorCorrectionLevel = 'H'; // High error correction level
+
+        var options = {
+            text: text,
+            width: 356,
+            height: 356,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel[errorCorrectionLevel], // Dynamically set based on variable
+            logo: logoInput ? URL.createObjectURL(logoInput) : "", // Temporary URL for the uploaded file
+            logoWidth: undefined, // To be calculated based on logoSizeFraction
+            logoHeight: undefined, // To be calculated based on logoSizeFraction
+        };
+
+        // Calculate logo size based on QR code size and fraction
+        options.logoWidth = options.logoHeight = options.width * logoSizeFraction;
+
+        // Create QRCode
+        new QRCode(document.getElementById("qrcode"), options);
+}
+
+
+    function downloadQRCode() {
+        var qrCanvas = document.getElementById('qrcode').querySelector('canvas'); // Get the QR code canvas
+        if (!qrCanvas) {
+            alert('No QR code generated.');
+            return;
+        }
+
+        var padding = 20; // Set the desired padding
+        var paddedWidth = qrCanvas.width + 2 * padding;
+        var paddedHeight = qrCanvas.height + 2 * padding;
+
+        // Create a new canvas element to include the padding
+        var canvas = document.createElement('canvas');
+        canvas.width = paddedWidth;
+        canvas.height = paddedHeight;
+        var context = canvas.getContext('2d');
+
+        // Fill the new canvas with white background (or desired background color)
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the original QR code onto the center of the new canvas
+        context.drawImage(qrCanvas, padding, padding);
+
+        // Convert the new canvas to an image and trigger the download
+        var url = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+        var link = document.createElement('a');
+        link.download = 'qrcode.png';
+        link.href = url;
+        document.body.appendChild(link); // This line is needed for Firefox
+        link.click();
+        document.body.removeChild(link); // This line is needed for Firefox
+}
+</script>
+</body>
+</html>
