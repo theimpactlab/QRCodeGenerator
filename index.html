@@ -3,29 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator</title>
+    <title>Impact Lab QR Code Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/easyqrcodejs@4.4.0/dist/easy.qrcode.min.js"></script>
     <script src="https://kit.fontawesome.com/19a0336ebe.js" crossorigin="anonymous"></script>
-
+    <style>
+        :root {
+            --primary-color: #5D3FD3;
+            --primary-hover: #4c32cc;
+            --text-color: #333;
+            --background-color: #fff;
+            --border-color: #e5e5e5;
+            --error-color: #dc3545;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .logo {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        input[type="text"]:focus,
+        input[type="file"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+        #qrcode {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #qrcode img {
+            max-width: 100%;
+            height: auto;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="header">
-         <img src="https://p3plzcpnl504990.prod.phx3.secureserver.net:2083/cpsess4441936114/frontend/jupiter/filemanager/showfile.html?file=impactlab-logo.svg&fileop=&dir=%2Fhome%2Fv0ogqd9816lc%2Fpublic_html%2Fimages&dirop=&charset=&file_charset=&baseurl=&basedir=" alt="x" style="height: 100px;">
+    <div class="container">
+        <a href="https://theimpactlab.co.uk" class="logo">theimpactlab</a>
+        </a>
+        <h1>QR Code Generator</h1>
+        <div class="form-group">
+            <label for="text">Enter text or URL:</label>
+            <input type="text" id="text">
+        </div>
+        <div class="form-group">
+            <label for="logo">Upload Logo:</label>
+            <input type="file" id="logo" accept="image/*">
+        </div>
+        <button onclick="generateQRCode()">Generate QR Code</button>
+        <button id="downloadResultsButton" onclick="downloadQRCode()">Download QR Code</button>
+        <div id="qrcode"></div>
     </div>
 
-    <h1>QR Code Generator</h1>
-    <label for="text">Enter text or URL:</label>
-    <input type="text" id="text">
-    <label for="logo">Upload Logo:</label>
-    <input type="file" id="logo" accept="image/*">
-    <button onclick="generateQRCode()">Generate QR Code</button>
-    <button id="downloadResultsButton" onclick="downloadQRCode()">Download QR Code</button>
-    <br>
-    <br>
-    <div id="qrcode"></div>
-
     <script>
-
     function generateQRCode() {
         var text = document.getElementById('text').value;
         var logoInput = document.getElementById('logo').files[0];
@@ -58,8 +154,7 @@
 
         // Create QRCode
         new QRCode(document.getElementById("qrcode"), options);
-}
-
+    }
 
     function downloadQRCode() {
         var qrCanvas = document.getElementById('qrcode').querySelector('canvas'); // Get the QR code canvas
@@ -93,7 +188,7 @@
         document.body.appendChild(link); // This line is needed for Firefox
         link.click();
         document.body.removeChild(link); // This line is needed for Firefox
-}
-</script>
+    }
+    </script>
 </body>
 </html>
